@@ -1,6 +1,6 @@
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import {Github,Globe} from "lucide-react"
+import { Github, Globe } from "lucide-react";
 import { useState } from "react";
 import Button from "../Button";
 // import { Link } from "react-router-dom";
@@ -44,10 +44,9 @@ export const HoverEffect = ({ items, className }) => {
             <div className="space-y-1 ">
               <img src={item.image} alt="image" className="rounded-xl z-0" />
               <div>
-
-              <CardTitle className={"px-2"}>{item.title}</CardTitle>
-              <CardTimeline className={"px-2"}>{item.timeline}</CardTimeline>
-              <CardTags>{item.tag}</CardTags>
+                <CardTitle className={"px-2"}>{item.title}</CardTitle>
+                <CardTimeline className={"px-2"}>{item.timeline}</CardTimeline>
+                <CardTags>{item.tag}</CardTags>
               </div>
             </div>
             <div className={"px-2 pb-2 space-y-2 "}>
@@ -70,8 +69,9 @@ export const Card = ({ className, children }) => {
         className
       )}
     >
-
-        <div className="p-2   h-full flex flex-col justify-between">{children}</div>
+      <div className="p-2   h-full flex flex-col justify-between">
+        {children}
+      </div>
     </div>
   );
 };
@@ -127,19 +127,20 @@ export const ButtonGrp = ({ items }) => {
 
   return (
     <div className=" flex gap-2 ">
-      <Button link={code_link} className={"flex gap-2 items-center justify-center "}>
-        <p>
-
-        Source
-        </p>
-      <Github size={20}/>
+      <Button
+        link={code_link}
+        className={"flex gap-2 items-center justify-center "}
+      >
+        <p>Source</p>
+        <Github size={20} />
       </Button>
 
-      <Button link={Live_link} className={"flex gap-2 items-center justify-center  "}>
-        <p>
-          Live
-          </p>
-        <Globe size={20}/>
+      <Button
+        link={Live_link}
+        className={"flex gap-2 items-center justify-center  "}
+      >
+        <p>Live</p>
+        <Globe size={20} />
       </Button>
     </div>
   );

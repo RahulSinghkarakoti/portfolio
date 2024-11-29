@@ -1,5 +1,5 @@
 import React from "react";
-function Button({ variant ="dark", children = "Button" ,link="",className="" }) {
+function Button({ variant ="dark", children = "Button" ,link="#",className="" }) {
     const baseClasses =
     "rounded-md w-full  px-4 py-2 text-sm font-medium dark:bg-primary-light dark:text-black    disabled:opacity-50 disabled:pointer-events-none" ;
   const variantClasses =

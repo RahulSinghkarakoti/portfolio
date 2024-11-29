@@ -52,21 +52,12 @@ function Home() {
               );
             })}
           </div>
-          <div className="py-3">
-            <a
-              href="../../assets/Rahul_SDE.pdf"
-              download="Rahul_SDE.pdf"
-              className=""
-            >
-              <Button className="flex items-center  sm:gap-2 gap-0 sm:w-[35%] w-[50%]"  >
-                <p >
-
-                Downlode Resume
-                </p>
-                <Download/>
-                
+          <div className="py-3 ">
+           
+              <Button link="../../assets/Rahul_SDE.pdf" variant="dark"  className="flex items-center  sm:gap-2 gap-0 sm:w-[35%] w-[50%]">
+                <p>Downlode Resume</p>
+                <Download />
               </Button>
-            </a>
           </div>
         </div>
         <div className=" sm:block flex  items-center justify-center">
