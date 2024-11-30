@@ -12,7 +12,7 @@ export default {
         primary: {
           light: '#ffffff', // White for light mode
           dark: '#000000',  // Black for dark mode
-        },
+              },
       },
       fontFamily: {
       newPopins:["Roboto", "sans-serif"]

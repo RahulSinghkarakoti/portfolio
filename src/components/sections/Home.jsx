@@ -8,10 +8,9 @@ import { Download } from "lucide-react";
 
 function Home() {
   const { name, desc, tags } = RESUMEDATA;
-  console.log(tags);
   return (
     <>
-      <div className="text-gray-700/60 dark:text-gray-400/60 text-lg font-normal  py-16   px-3  flex sm:flex-row flex-col-reverse    items-stretch sm:gap-1 gap-4 sm:space-x-1 space-y-2   h-full w-full  ">
+      <div className="text-gray-700/60 dark:text-gray-400/60 text-lg font-normal  py-16   px-3  flex md:flex-row sm:flex-row flex-col-reverse    items-stretch sm:gap-1 gap-4 sm:space-x-1 space-y-2   h-full w-full  ">
         <div className="w-full flex-1 space-y-0  ">
           <div className=" p-0  ">
             <p className="sm:text-lg text-sm">Hi there ! This is</p>
@@ -52,9 +51,9 @@ function Home() {
               );
             })}
           </div>
-          <div className="py-3 ">
+          <div className="py-3 inline-block">
            
-              <Button link="../../assets/Rahul_SDE.pdf" variant="dark"  className="flex items-center  sm:gap-2 gap-0 sm:w-[35%] w-[50%]">
+              <Button link="../../assets/Rahul_SDE.pdf" variant="dark"  className="flex items-center  sm:gap-2 gap-0 ">
                 <p>Downlode Resume</p>
                 <Download />
               </Button>

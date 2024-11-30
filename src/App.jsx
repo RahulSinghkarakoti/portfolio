@@ -19,7 +19,6 @@ export default function App() {
   const [dark, setDark] = useState(true);
 
   const darkModeHandler = () => {
-    console.log("toggle dark ")
     setDark((prevMode) => {
       const newMode = !prevMode;
       document.body.classList.toggle("dark", newMode);
@@ -39,8 +38,8 @@ export default function App() {
   
 
   return (
-    <div className="relative bg-white dark:bg-black   dark:text-white  w-full h-full sm:flex block items-center justify-center   font-newPopins  ">
-      <div className=" sm:w-2/3 w-full border-l-2 border-r-2  border-slate-300 dark:border-gray-600/40    ">
+    <div className="relative bg-white  dark:bg-black   dark:text-white  w-full h-full sm:flex block items-center justify-center   font-newPopins  ">
+      <div className=" sm:w-full md:w-full lg:w-2/3  w-full border-l-2 border-r-2  border-slate-300 dark:border-gray-600/40    ">
       <ScrollProgressBar/>
         <Home />
         <About />

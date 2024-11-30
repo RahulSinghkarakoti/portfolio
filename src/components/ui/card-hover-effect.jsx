@@ -122,7 +122,6 @@ export const CardTags = ({ className, children }) => {
 };
 
 export const ButtonGrp = ({ items }) => {
-  console.log(items);
   const { code_link, Live_link } = items;
 
   return (

@@ -23,7 +23,6 @@ useEffect(()=>{
 
 },[])
 
-console.log("rerender")
 
   return (
     <div className="fixed top-0 left-0 w-full h-1 bg-transparent z-50">
