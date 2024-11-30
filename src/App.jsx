@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   About,
   Contact,
@@ -9,8 +8,9 @@ import {
   Projects,
   Skill,
 } from "./components/sections";
-import { Sun, Moon } from "lucide-react";
 import ScrollProgressBar  from "./components/ScrollProgressBar"; 
+import Darkmodebtn from "./components/Darkmodebtn";
+import React, { useEffect, useState } from "react";
 
  
  
@@ -22,7 +22,7 @@ export default function App() {
     setDark((prevMode) => {
       const newMode = !prevMode;
       document.body.classList.toggle("dark", newMode);
-      localStorage.setItem("darkMode", newMode ? "true" : "false");
+      localStorage.setItem("darkMode" , newMode ?"true":"false") 
 
       return newMode;
     });
@@ -33,9 +33,6 @@ export default function App() {
     setDark(savedDarkMode);
     document.body.classList.toggle("dark", savedDarkMode);
   }, []);
-
-
-  
 
   return (
     <div className="relative bg-white  dark:bg-black   dark:text-white  w-full h-full sm:flex block items-center justify-center   font-newPopins  ">
@@ -50,12 +47,8 @@ export default function App() {
         <Projects />
         <Contact />
       </div>
-      <div
-        className="absolute z-20 top-8 right-5 dark:text-white shadow-md dark:shadow-white shadow-black p-2  border-2 border-black dark:border-white rounded-full "
-        onClick={() => darkModeHandler()}
-      >
-        {dark ? <Sun size={30} /> : <Moon size={30} />}
-      </div>
+      <Darkmodebtn darkModeHandler={darkModeHandler} dark={dark} classname="absolute z-20 top-8 right-5"/> 
+     
     </div>
   );
 }
