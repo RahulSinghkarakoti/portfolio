@@ -9,7 +9,7 @@ function About() {
       </div>
       <div className="h-full flex justify-center items-center p-2">
         <p className="px-1 mt-1 text-gray-700/80 dark:text-gray-300/80 text-base  ">
-        I’m currently pursuing my <strong>BCA</strong> and will be completing it in 2025. At the moment, I’m focusing on <strong>Next.js </strong> and working on various projects to enhance my skills. I enjoy contributing to <strong>open-source projects</strong> and learning new technologies to stay updated in the ever-evolving tech world.
+        I’m currently pursuing my <strong>BCA</strong> and will be completing it in 2025. At the moment, I’m focusing on <strong>Next.js </strong> and working on various projects to enhance my skills. I enjoy contributing to <strong>open-source projects</strong> and learning new technologies to stay updated in the ever-evolving tech world. 
         </p>
       </div>
     </div>

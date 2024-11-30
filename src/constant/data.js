@@ -6,7 +6,7 @@ import mstryMsg from "../assets/mstryMsg.png"
 
 
 const RESUMEDATA = {
-  name: "Rahul Singh Karakoti",
+  name: "Rahul Singh  ",
   desc: "Crafting impactful tech projects with a focus on front-end design and full-stack development, while constantly expanding my skillset",
   about:
     "I’m currently pursuing my **BCA** and will be completing it in 2025. At the moment, I’m focusing on **Next.js** and working on various projects to enhance my skills. I enjoy contributing to **open-source projects** and learning new technologies to stay updated in the ever-evolving tech world.",
@@ -59,42 +59,42 @@ const RESUMEDATA = {
     {
       title: "Planmaster",
       description:
-        "A web app for creating, managing, and tracking personalized learning plans with real-time progress updates.",
+        "A web application for creating, managing, and tracking personalized learning plans, featuring real-time progress updates and user-friendly interfaces.",
       image: planmaster,
       Live_link: "https://planmaster-alpha.vercel.app/",
       code_link: "https://github.com/RahulSinghkarakoti/planmaster",
-      tag: ["Next.js", "TypeScript", "Gemini API", "MongoDB", "Tailwind CSS"],
+      tag: ["Next.js", "TypeScript", "Gemini API", "MongoDB", "Tailwind","Shadcn"],
       timeline: "Sep 2024 - Oct 2024",
     },
     {
       title: "VideoTube",
       description:
-        "A full-stack web app replicating core YouTube features like video uploads, likes, and comments.",
+        "A full-stack web application replicating core YouTube features, including video uploads, likes, comments, user authentication, and responsive design.",
       image: videotube,
       Live_link: "https://frontend-video-tube.vercel.app/",
       code_link: "https://github.com/RahulSinghkarakoti/frontend-VideoTube",
-      tag: ["ReactJS", "Node.js", "MongoDB", "Express", "JWT"],
-      timeline: "Sep 2024 - Oct 2024",
+      tag: ["ReactJS", "Node.js", "MongoDB", "Express","Axios", "JWT"],
+      timeline: "Aug 2024 - July 2024",
     },
     {
       title: "mstryMessage",
       description:
-        "A platform that lets users create shareable links to collect anonymous feedback and opinions from others.",
+        "A platform that allows users to generate and share custom links to gather anonymous feedback and opinions from others securely.",
       image: mstryMsg,
       Live_link: "https://mstry-message-tau.vercel.app/",
       code_link: "https://github.com/RahulSinghkarakoti/mstryMessage",
-      tag: ["NextJs", "TypeScript", "TailwindCSS", "zod", "groq"],
-      timeline: "Sep 2024 - Oct 2024",
+      tag: ["NextJs", "TypeScript", "Tailwind", "zod", "groq","Resend"],
+      timeline: "June 2024 - May 2024",
     },
     {
       title: "IBM Summer Internship Project",
       description:
-        "Built a responsive website front end, enhancing UI/UX with ReactJS for an internal project.",
+        "Developed a responsive website front end for an internal project, focusing on enhancing UI/UX using ReactJS and modern design principles.",
       image: internship,
       Live_link: "https://ibm-zerohunger-project.vercel.app/",
       code_link: "https://github.com/Princekashish/IBM-Client",
-      tag: ["ReactJS", "CSS", "JavaScript", "Figma", " Git"],
-      timeline: "Sep 2024 - Oct 2024",
+      tag: ["ReactJS", "CSS", "JavaScript", "Figma", "Axios","Git"],
+      timeline: "June 2024 - Aug 2024",
     },
     // {
     //   title: "Blog",
