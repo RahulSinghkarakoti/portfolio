@@ -21,7 +21,7 @@ module.exports = {
         },
         colors: {
             "light-foreground": "#262523",
-            "light-background": "#fff7f0",
+            "light-background": "#f5f4f1",
             "dark-foreground": "#fff7f0",
             "dark-background": "#1a1921",
             "text-hover": "#3c7cff",
@@ -30,6 +30,10 @@ module.exports = {
         },
         extend: {
             keyframes: {
+                blink: {
+                    "0%, 49%": { opacity: "1" },
+                    "50%, 100%": { opacity: "0" },
+                },
                 "accordion-down": {
                     from: { height: "0" },
                     to: { height: "var(--radix-accordion-content-height)" },
@@ -40,6 +44,7 @@ module.exports = {
                 },
             },
             animation: {
+                blink: "blink 1.1s step-end infinite",
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
             },
@@ -52,6 +57,7 @@ module.exports = {
                 oswald: "var(--font-oswald)",
                 sourceSans3: "var(--font-source-sans-3)",
                 playfairDisplay: "var(--font-playfair-display)",
+                geistMono: "var(--font-geist-mono)",
             },
         },
     },

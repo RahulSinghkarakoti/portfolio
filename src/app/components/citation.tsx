@@ -4,12 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { SOURCES, entrySlug } from "../data/sources";
+import { SOURCES, type Source } from "../data/sources";
 
 const OPEN_DELAY = 55;
 const CLOSE_DELAY = 30;
-const CARD_W = 382; // wide enough that the longest source name clears the date
-const MARK_PX = 30;
+const CARD_W = 340; // wide enough that the longest source name clears the date
+const MARK_PX = 16;
 
 /** The source's favicon, or its initial when there isn't one to vendor. */
 const Mark = ({
@@ -51,24 +51,8 @@ const Mark = ({
     </span>
 );
 
-/**
- * An @-mention in the prose, set as a pill rather than an underline. The card
- * reads header / title / body: where the work was, what the role was, and one
- * line on it. It identifies the source, it doesn't reproduce it — clicking
- * lands on the full entry.
- */
-const Cited = ({
-    source,
-    children,
-    isLight,
-    onJump,
-}: {
-    source: string;
-    children: React.ReactNode;
-    isLight: boolean;
-    /** Optional override; by default the mention scrolls to its entry itself. */
-    onJump?: (entry: string) => void;
-}) => {
+/** An underlined @-mention whose hover card reads source / role / one line; clicking opens the source. */
+const Cited = ({ source, children, isLight }: { source: string; children: React.ReactNode; isLight: boolean }) => {
     const src = SOURCES[source];
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -102,22 +86,17 @@ const Cited = ({
 
     if (!src) return <>{children}</>;
 
-    const activate = () => {
+    const members = src.group?.map((key) => SOURCES[key]).filter(Boolean);
+
+    const go = (target: Source) => {
         setOpen(false);
-        if (src.href) {
-            if (src.href.startsWith("/")) router.push(src.href);
-            else window.open(src.href, "_blank", "noopener");
-            return;
-        }
-        if (!src.entry) return;
-        if (onJump) {
-            onJump(src.entry);
-            return;
-        }
-        document
-            .getElementById(`experience-${entrySlug(src.entry)}`)
-            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (!target.href) return;
+        if (target.href.startsWith("/")) router.push(target.href);
+        else window.open(target.href, "_blank", "noopener");
     };
+
+    // A group's mention lands on its first member; its card lets you pick one.
+    const activate = () => go(members?.[0] ?? src);
 
     return (
         <span
@@ -135,77 +114,93 @@ const Cited = ({
                 onFocus={show}
                 onBlur={hide}
                 aria-label={`${src.name}, ${src.role}`}
-                // No chrome at rest — the @ is the affordance. The pill is drawn
-                // only on hover/focus, and leading is set explicitly so it hugs
-                // the text instead of inheriting the h1's 3vh line box. The negative
-                // margin cancels most of the padding so the pill doesn't push the
-                // punctuation away from each mention.
-                // Vertical breathing room comes from padding cancelled by negative
-                // margin, not from `leading` — the parent line-height is 3vh, so a
-                // taller line box would push the prose lines apart on short viewports.
-                className={`cursor-pointer inline-block align-baseline leading-[20px] py-[4px] -my-[4px] rounded-[8px] transition-[background-color] duration-150 outline-none ${
-                    src.icon ? "pl-[4px] pr-[7px]" : "px-[7px]"
-                } ${
+                // A plain underline marks the mention; it darkens on hover, focus, or while the card is open.
+                className={`cursor-pointer inline align-baseline underline decoration-1 underline-offset-[5px] transition-[text-decoration-color] duration-150 outline-none focus-visible:decoration-2 ${
                     open
-                        ? "bg-[color-mix(in_srgb,var(--foreground-color)_16%,transparent)] text-foreground"
-                        : "bg-[color-mix(in_srgb,var(--foreground-color)_7%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground-color)_16%,transparent)] hover:text-foreground focus-visible:bg-[color-mix(in_srgb,var(--foreground-color)_16%,transparent)] focus-visible:text-foreground"
+                        ? "decoration-foreground text-foreground"
+                        : "decoration-[color-mix(in_srgb,var(--foreground-color)_35%,transparent)] hover:decoration-foreground hover:text-foreground focus-visible:decoration-foreground focus-visible:text-foreground"
                 }`}
             >
-                {src.icon && <Mark icon={src.icon} name={src.name} size={15} scale={src.iconScale} inline />}
                 {children}
             </button>
 
             <AnimatePresence>
                 {open && (
                     <motion.span
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 2, transition: { duration: 0.09, ease: "easeIn" } }}
-                        transition={{ duration: 0.14, ease: "easeOut" }}
-                        onClick={activate}
-                        className="absolute left-0 top-full z-50 mt-[10px] flex flex-col rounded-2xl p-[18px] cursor-pointer text-foreground"
+                        initial={{ opacity: 0, y: 4, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 2, scale: 0.99, transition: { duration: 0.08, ease: "easeIn" } }}
+                        transition={{ duration: 0.12, ease: "easeOut" }}
+                        onClick={members ? undefined : activate}
+                        data-koi-ignore
+                        className="absolute bottom-full left-0 z-50 mb-[10px] flex origin-bottom-left flex-col overflow-hidden rounded-[8px] cursor-pointer font-geistMono text-foreground"
                         style={{
                             width: CARD_W,
-                            background: isLight ? "#fffdfa" : "#242229",
-                            border: isLight
-                                ? "1px solid color-mix(in srgb, var(--foreground-color) 12%, transparent)"
-                                : "none",
+                            // Linear-style elevated surface: a solid step up from the page, a hairline border,
+                            // a faint top highlight, and a layered shadow instead of glass.
+                            background: isLight
+                                ? "color-mix(in srgb, var(--background-color) 45%, #ffffff)"
+                                : "color-mix(in srgb, var(--background-color) 93%, var(--foreground-color))",
+                            border: `1px solid color-mix(in srgb, var(--foreground-color) ${isLight ? 11 : 9}%, transparent)`,
                             boxShadow: isLight
-                                ? "0 14px 34px -14px rgba(38,37,35,0.22)"
-                                : "0 18px 44px -16px rgba(0,0,0,0.45)",
+                                ? "inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(38, 37, 35, 0.06), 0 12px 32px -12px rgba(38, 37, 35, 0.18)"
+                                : "inset 0 1px 0 color-mix(in srgb, var(--foreground-color) 6%, transparent), 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -12px rgba(0, 0, 0, 0.6)",
                         }}
                     >
-                        {/* source, with the date as right-aligned metadata — keeps it
-                            out of the body copy without costing a whole row */}
-                        <span className="flex items-center gap-[9px] leading-none">
-                            <Mark icon={src.icon} name={src.name} size={MARK_PX} scale={src.iconScale} />
-                            <span
-                                className={`font-roboto text-[13px] truncate ${isLight ? "opacity-70" : "opacity-55"}`}
-                            >
-                                {src.name}
+                        {members ? (
+                            <span className="flex flex-col px-[6px] py-[6px]">
+                                {members.map((m) => (
+                                    <span
+                                        key={m.key}
+                                        role="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            go(m);
+                                        }}
+                                        className="flex flex-col gap-[6px] rounded-[6px] px-[8px] py-[8px] transition-colors duration-100 hover:bg-[color-mix(in_srgb,var(--foreground-color)_6%,transparent)]"
+                                    >
+                                        <span className="flex items-center gap-[8px] text-[12px] leading-none">
+                                            <Mark icon={m.icon} name={m.name} size={MARK_PX} scale={m.iconScale} />
+                                            <span className="truncate opacity-60">{m.name}</span>
+                                            <span className="ml-auto shrink-0 pl-2 tabular-nums opacity-40">
+                                                {m.dates}
+                                            </span>
+                                        </span>
+                                        <span className="text-[12px] leading-[18px] opacity-60">{m.summary}</span>
+                                    </span>
+                                ))}
                             </span>
-                            <span
-                                className={`font-roboto text-[12px] tracking-[0.02em] ml-auto shrink-0 pl-2 ${
-                                    isLight ? "opacity-60" : "opacity-40"
-                                }`}
-                            >
-                                {src.dates}
+                        ) : (
+                            <span className="flex flex-col gap-[6px] px-[14px] pb-[12px] pt-[12px]">
+                                {/* source, with the date as right-aligned metadata */}
+                                <span className="flex items-center gap-[8px] text-[12px] leading-none">
+                                    <Mark icon={src.icon} name={src.name} size={MARK_PX} scale={src.iconScale} />
+                                    <span className="truncate opacity-60">{src.name}</span>
+                                    <span className="ml-auto shrink-0 pl-2 tabular-nums opacity-40">{src.dates}</span>
+                                </span>
+
+                                <span className="mt-[4px] text-[13px] leading-[18px]">{src.role}</span>
+
+                                <span
+                                    className="text-[12px] leading-[18px] overflow-hidden opacity-60"
+                                    style={{ display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}
+                                >
+                                    {src.summary}
+                                </span>
                             </span>
-                        </span>
+                        )}
 
-                        {/* title */}
-                        <span className="font-roboto text-[17px] leading-[22px] text-foreground mt-[14px]">
-                            {src.role}
-                        </span>
-
-                        {/* body */}
+                        {/* what a click does, set apart like a command hint */}
                         <span
-                            className={`font-roboto text-[14px] leading-[21px] mt-[10px] overflow-hidden ${
-                                isLight ? "opacity-75" : "opacity-60"
-                            }`}
-                            style={{ display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}
+                            className="flex items-center justify-between px-[14px] py-[8px] text-[11px] leading-none opacity-40"
+                            style={{
+                                borderTop: `1px solid color-mix(in srgb, var(--foreground-color) ${isLight ? 8 : 7}%, transparent)`,
+                            }}
                         >
-                            {src.summary}
+                            <span>
+                                {members ? "open a site" : src.href?.startsWith("/") ? "open page" : "open site"}
+                            </span>
+                            <span aria-hidden="true">{src.href?.startsWith("/") ? "→" : "↗"}</span>
                         </span>
                     </motion.span>
                 )}
