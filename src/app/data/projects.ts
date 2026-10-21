@@ -14,8 +14,9 @@ export type Project = {
     page?: {
         tagline: string;
         /** The write-up under the tagline, so the page doesn't repeat it. */
-        about: string;
-        video: string;
+        about: Prose;
+        /** Omit for a project without a demo; the poster then stands alone as the lead image. */
+        video?: string;
         poster: string;
         /** Wide banner across the top of the page, like a Notion cover. */
         cover?: string;
@@ -26,10 +27,13 @@ export type Project = {
     };
 };
 
+/** Plain text with inline links. */
+export type Prose = (string | { text: string; href: string })[];
+
 /** A paragraph is plain text with inline links; a clip is a short muted video. */
 export type StoryBlock =
     | { kind: "heading"; text: string }
-    | { kind: "text"; parts: (string | { text: string; href: string })[] }
+    | { kind: "text"; parts: Prose }
     | { kind: "clip"; src: string; poster?: string; label: string }
     | { kind: "image"; src: string; alt: string; width: number; height: number }
     /** `start` is the panel open before anyone interacts; lead with the strongest shot. */
@@ -71,7 +75,9 @@ export const projects: Project[] = [
         thumb: "/projects/dynami/dynami-cover.webp",
         page: {
             tagline: "The Dynamic Island, for developers.",
-            about: "Dynami lives in your Mac's notch and keeps the things that need your attention within reach while you work, from agent permission prompts and pull request activity to the next meeting on your calendar.",
+            about: [
+                "Dynami lives in your Mac's notch and keeps the things that need your attention within reach while you work, from agent permission prompts and pull request activity to the next meeting on your calendar.",
+            ],
             video: "/projects/dynami/dynami-demo.mp4",
             poster: "/projects/dynami/dynami-demo-poster.webp",
             cover: "/projects/dynami/dynami-header.webp",
@@ -211,7 +217,107 @@ export const projects: Project[] = [
         tech: ["Next.js", "TypeScript", "PostgreSQL"],
         year: "Spring 2025",
         link: "https://www.vetruly.com/",
-        thumb: "/projects/vetruly/vetruly-thumb.webp",
+        thumb: "/projects/vetruly/vetruly-preview.webp",
+        page: {
+            tagline: "Trusted vet care for recovering and medically complex pets.",
+            about: [
+                "Vetruly helps owners of pets recovering from surgery or living with complex conditions find vetted providers for post-op care, integrative care, specialty boarding and drop-in visits. ",
+                { text: "Katlyn", href: "https://www.vetruly.com/about" },
+                " brought the idea to ",
+                { text: "Generate Product Development", href: "https://generatenu.com/" },
+                ", and we built it from 0 to 1 as an MVP. I led the team of 5 engineers, and it's now a deployed product with pet owners and licensed providers using it.",
+            ],
+            poster: "/projects/vetruly/vetruly-hero.webp",
+            cover: "/projects/vetruly/vetruly-header.webp",
+            share: "/projects/vetruly/vetruly-og.png",
+            story: [
+                { kind: "heading", text: "Finding care" },
+                {
+                    kind: "text",
+                    parts: [
+                        "Owners search a map for providers nearby, filtered by the kind of care their pet needs, then pick a time from the provider's profile.",
+                    ],
+                },
+                {
+                    kind: "gallery",
+                    title: "For owners",
+                    start: 1,
+                    shots: [
+                        {
+                            src: "/projects/vetruly/welcome-crop.webp",
+                            frame: "/projects/vetruly/welcome-frame.webp",
+                            width: 1200,
+                            height: 692,
+                            alt: "The Vetruly sign-in screen, a line drawing of a dog on a rust panel next to a Welcome to Vetruly form with email, Google and Microsoft options",
+                            title: "Welcome",
+                            caption: "Sign in with email, Google or Microsoft. Vets and vet techs join as providers.",
+                        },
+                        {
+                            src: "/projects/vetruly/explore-crop.webp",
+                            frame: "/projects/vetruly/explore-frame.webp",
+                            width: 1200,
+                            height: 692,
+                            alt: "A map of Boston with vets pinned on it, a search for post-operative care, and a card for Dr. Elizabeth Ulma with her rating, care types and price",
+                            title: "Explore providers",
+                            caption:
+                                "Providers on a map, filtered by post-op care, integrative care, specialty boarding or drop-ins.",
+                        },
+                        {
+                            src: "/projects/vetruly/profile-crop.webp",
+                            frame: "/projects/vetruly/profile-frame.webp",
+                            width: 1200,
+                            height: 692,
+                            alt: "Dr. Elizabeth Ulma's profile, with a verified MA license badge, her clinic's location, upcoming availability and a Book appointment button",
+                            title: "Vet profile",
+                            caption:
+                                "A verified license, the clinic, and the week's availability next to the booking button.",
+                        },
+                        {
+                            src: "/projects/vetruly/date-crop.webp",
+                            frame: "/projects/vetruly/date-frame.webp",
+                            width: 1200,
+                            height: 692,
+                            alt: "Step 3 of 7 of booking, a March 2025 calendar with the 14th selected and a column of open times with 2:00 PM chosen",
+                            title: "Choose a date",
+                            caption: "Booking is a short series of steps, with open times listed beside the calendar.",
+                        },
+                    ],
+                },
+                { kind: "heading", text: "After booking" },
+                {
+                    kind: "text",
+                    parts: [
+                        "Both sides get a careboard. Owners keep each provider's messages and visit details in one thread, and providers accept or decline requests next to their inbox.",
+                    ],
+                },
+                {
+                    kind: "gallery",
+                    title: "Careboards",
+                    shots: [
+                        {
+                            src: "/projects/vetruly/owner-crop.webp",
+                            frame: "/projects/vetruly/owner-frame.webp",
+                            width: 1200,
+                            height: 692,
+                            alt: "Anna's Careboard, listing three vets on the left and a thread with Dr. Ulma showing an approved post-op home visit for Bruce",
+                            title: "Owner",
+                            caption:
+                                "Every provider an owner has booked, with the visit, files and replies in one thread.",
+                        },
+                        {
+                            src: "/projects/vetruly/provider-crop.webp",
+                            frame: "/projects/vetruly/provider-frame.webp",
+                            width: 1200,
+                            height: 692,
+                            alt: "Dr. Ulma's careboard, with her ratings and experience, three pending bookings to accept or decline, and a column of messages from owners",
+                            title: "Provider",
+                            caption:
+                                "Pending requests to accept or decline, with unread messages from owners alongside.",
+                        },
+                    ],
+                },
+            ],
+        },
     },
     {
         index: "04",
