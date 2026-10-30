@@ -13,6 +13,11 @@ const SOCIALS = [
     { label: "resume", href: "/Resume.pdf" },
 ];
 
+const CREDITS = [
+    { label: "Dao-Ho/portfolio", href: "https://github.com/Dao-Ho/portfolio" },
+    { label: "stackedlol/ascii-sharks", href: "https://github.com/stackedlol/ascii-sharks" },
+];
+
 const UNDERLINE =
     "underline decoration-[color-mix(in_srgb,var(--foreground-color)_35%,transparent)] decoration-1 underline-offset-[5px] outline-none transition-opacity duration-150 hover:decoration-foreground focus-visible:decoration-foreground";
 
@@ -38,6 +43,25 @@ const Socials = ({ className }: { className?: string }) => (
                     target={href.startsWith("mailto:") ? undefined : "_blank"}
                     rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                     className={`${UNDERLINE} opacity-60 hover:opacity-100 focus-visible:opacity-100`}
+                >
+                    {label}
+                </a>
+            </span>
+        ))}
+    </p>
+);
+
+const Credits = ({ className }: { className?: string }) => (
+    <p className={`text-[12px] ${className ?? ""}`}>
+        <span className="opacity-40">credits: </span>
+        {CREDITS.map(({ label, href }, i) => (
+            <span key={label}>
+                {i > 0 && <span className="opacity-30"> / </span>}
+                <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${UNDERLINE} opacity-45 hover:opacity-100 focus-visible:opacity-100`}
                 >
                     {label}
                 </a>
@@ -109,6 +133,7 @@ const desktopPage = ({ stats }: { stats: PondStats }) => {
                     <Cited source="vips">VIPS (GGSIPU)</Cited>.
                 </p>
                 <Socials className="mt-[1.5vh]" />
+                <Credits className="mt-1" />
             </motion.div>
         </Container>
     );
@@ -171,6 +196,7 @@ const mobilePage = () => {
                     <MobileLink source="vips">VIPS (GGSIPU)</MobileLink>.
                 </p>
                 <Socials className="mt-2" />
+                <Credits />
             </motion.div>
         </Container>
     );
