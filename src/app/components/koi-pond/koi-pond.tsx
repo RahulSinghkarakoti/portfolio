@@ -12,11 +12,11 @@ export type PondStats = { koi: number; pellets: number };
 const STEP = 1 / 60;
 const MAX_STEPS = 4;
 const INTERACTIVE = "a, button, input, textarea, select, label, [role='button'], [data-koi-ignore]";
-// Content over the pond carries this attribute; koi steer around it and fade beneath it.
+// Content over the pond carries this attribute; sharks steer around it and fade beneath it.
 const AVOID_TARGETS = "[data-koi-avoid]";
 // Re-measure the content boxes this often, in frames, to follow layout shifts and entrance animations.
 const MEASURE_EVERY_FRAMES = 30;
-// Content boxes closer than this merge, so koi aren't squeezed into the slot between them.
+// Content boxes closer than this merge, so sharks aren't squeezed into the slot between them.
 const MERGE_GAP_PX = 160;
 
 function mergeNearby(boxes: Box[]) {
@@ -43,7 +43,6 @@ class PondEngine {
     private last = 0;
     private acc = 0;
     private frames = 0;
-    private lastPointerTime = 0;
     private reported: PondStats = { koi: -1, pellets: -1 };
     private visible = true;
     private disposed = false;
@@ -91,7 +90,7 @@ class PondEngine {
         const rect = this.canvas.getBoundingClientRect();
         if (rect.width < 1 || rect.height < 1) return;
         this.renderer.resize(rect.width, rect.height, Math.min(window.devicePixelRatio || 1, 2));
-        this.world.resize(rect.width, rect.height);
+        this.world.resize(rect.width, rect.height, this.renderer.cellWidth, this.renderer.cellHeight);
         this.measureContent();
         this.report();
         if (this.reducedMotion.matches) this.drawStill();
@@ -99,8 +98,8 @@ class PondEngine {
 
     // Only call back when a count changes, so the page doesn't re-render every frame.
     private report() {
-        const koi = this.world.koi.length;
-        const pellets = this.world.pellets.length;
+        const koi = this.world.sharks.length;
+        const pellets = this.world.liveFish;
         if (koi === this.reported.koi && pellets === this.reported.pellets) return;
         this.reported = { koi, pellets };
         this.onStats(this.reported);
@@ -150,7 +149,7 @@ class PondEngine {
         this.raf = requestAnimationFrame(this.frame);
     };
 
-    // Reduced motion: let the koi spread out, then hold a single frame.
+    // Reduced motion: let the sharks and schools spread out, then hold a single frame.
     private drawStill() {
         if (this.world.time < 4) {
             for (let i = 0; i < 240; i++) this.world.step(STEP);
@@ -170,32 +169,25 @@ class PondEngine {
     private onPointerMove = (e: PointerEvent) => {
         const { x, y, inside } = this.toLocal(e);
         const p = this.world.pointer;
-        const elapsed = Math.max(1, e.timeStamp - this.lastPointerTime) / 1000;
-        const speed = Math.hypot(x - p.x, y - p.y) / elapsed;
-        p.speed += (Math.min(speed, 5000) - p.speed) * 0.5;
-        this.lastPointerTime = e.timeStamp;
         p.x = x;
         p.y = y;
         p.active = inside && e.pointerType !== "touch";
     };
 
-    // Clicks on empty space drop food; links, buttons, and text selection are left alone.
+    // Clicks on empty space splash the water and scatter nearby fish; links, buttons, and text selection are left alone.
     private onClick = (e: MouseEvent) => {
         if (this.reducedMotion.matches) return;
-        // The path recorded at dispatch, not target.closest(): a control that re-renders as it's clicked (the theme
-        // toggle swaps its icon) can leave the target detached, with no ancestors left to find the button through.
         if (e.composedPath().some((n) => n instanceof Element && n.matches(INTERACTIVE))) return;
         if (window.getSelection()?.toString()) return;
         const { x, y, inside } = this.toLocal(e);
         if (!inside) return;
-        this.world.feed(x, y);
-        posthog.capture("koi_pond_fed", { pellet_count: this.world.pellets.length });
+        this.world.splash(x, y);
+        posthog.capture("koi_pond_fed", { pellet_count: this.world.liveFish });
         this.report();
     };
 
     private onPointerLeave = () => {
         this.world.pointer.active = false;
-        this.world.pointer.speed = 0;
     };
 }
 

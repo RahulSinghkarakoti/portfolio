@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { motion } from "motion/react";
 import Cited from "./citation";
 import Container from "./container";
@@ -6,9 +7,10 @@ import type { PondStats } from "./koi-pond/koi-pond";
 import { SOURCES } from "../data/sources";
 
 const SOCIALS = [
-    { label: "github", href: "https://github.com/Dao-Ho" },
-    { label: "linkedin", href: "https://www.linkedin.com/in/dao-ho/" },
-    { label: "x", href: "https://x.com/daoho04" },
+    { label: "github", href: "https://github.com/rahulSinghkarakoti" },
+    { label: "linkedin", href: "https://www.linkedin.com/in/rahul-singh-9b2251304/" },
+    { label: "email", href: "mailto:rahulkarakoti28@gmail.com" },
+    { label: "resume", href: "/Resume.pdf" },
 ];
 
 const UNDERLINE =
@@ -16,9 +18,9 @@ const UNDERLINE =
 
 const QuoteLines = () => (
     <>
-        in an ocean of gluttony,
+        in an ocean of complexity,
         <br />
-        cast a fine net
+        engineer systems that endure
         <span
             aria-hidden="true"
             className="ml-1 inline-block h-[1em] w-[0.55em] translate-y-[0.15em] animate-blink bg-foreground motion-reduce:animate-none"
@@ -33,8 +35,8 @@ const Socials = ({ className }: { className?: string }) => (
                 {i > 0 && <span className="opacity-40"> / </span>}
                 <a
                     href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                     className={`${UNDERLINE} opacity-60 hover:opacity-100 focus-visible:opacity-100`}
                 >
                     {label}
@@ -91,18 +93,20 @@ const desktopPage = ({ stats }: { stats: PondStats }) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
             >
-                <h1>Xin chào, I&apos;m Dao.</h1>
+                <h1>Hi, I&apos;m Rahul.</h1>
                 <p>
-                    Software Engineer @ <Cited source="googleIncoming">Google</Cited>, passionate about building the
-                    future.
+                    Full Stack Developer @ <Cited source="siteguru">Site Guru</Cited>, building multi-tenant SaaS
+                    platforms from 0 to 1.
                 </p>
                 <p>
-                    Before that, <Cited source="google">Google</Cited> (intern), <Cited source="agency">Agency</Cited>,
-                    and a few <Cited source="startups">early-stage startups</Cited>.
+                    Shipped <Cited source="indicava">Indicava ERP</Cited> and{" "}
+                    <Cited source="bestprep">BestPrep LMS</Cited> after starting as an{" "}
+                    <Cited source="siteguruIntern">intern</Cited>.
                 </p>
                 <p>
-                    Currently, building @ <Cited source="generate">Generate</Cited>, researching @{" "}
-                    <Cited source="parcs">PARCS Lab</Cited>.
+                    Currently exploring <Cited source="rag">RAG &amp; AI Engineering</Cited>, building{" "}
+                    <Cited source="rootspace">RootSpace</Cited>, and BCA graduate from{" "}
+                    <Cited source="vips">VIPS (GGSIPU)</Cited>.
                 </p>
                 <Socials className="mt-[1.5vh]" />
             </motion.div>
@@ -110,12 +114,23 @@ const desktopPage = ({ stats }: { stats: PondStats }) => {
     );
 };
 
-// Hover cards need a pointer, so on touch the mentions link straight to each site.
-const MobileLink = ({ source, children }: { source: string; children: React.ReactNode }) => (
-    <a href={SOURCES[source].href} target="_blank" rel="noopener noreferrer" className={UNDERLINE}>
-        {children}
-    </a>
-);
+// Hover cards need a pointer, so on touch the mentions link straight to each destination.
+const MobileLink = ({ source, children }: { source: string; children: React.ReactNode }) => {
+    const href = SOURCES[source]?.href;
+    if (!href) return <>{children}</>;
+    if (href.startsWith("/")) {
+        return (
+            <Link href={href} className={UNDERLINE}>
+                {children}
+            </Link>
+        );
+    }
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={UNDERLINE}>
+            {children}
+        </a>
+    );
+};
 
 const mobilePage = () => {
     return (
@@ -140,18 +155,20 @@ const mobilePage = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
             >
-                <h1>Xin chào, I&apos;m Dao.</h1>
+                <h1>Hi, I&apos;m Rahul.</h1>
                 <p>
-                    Software Engineer @ <MobileLink source="googleIncoming">Google</MobileLink>, passionate about
-                    building the future.
+                    Full Stack Developer @ <MobileLink source="siteguru">Site Guru</MobileLink>, building multi-tenant
+                    SaaS platforms from 0 to 1.
                 </p>
                 <p>
-                    Before that, <MobileLink source="google">Google</MobileLink> (intern),{" "}
-                    <MobileLink source="agency">Agency</MobileLink>, and a few early-stage startups.
+                    Shipped <MobileLink source="indicava">Indicava ERP</MobileLink> and{" "}
+                    <MobileLink source="bestprep">BestPrep LMS</MobileLink> after starting as an{" "}
+                    <MobileLink source="siteguruIntern">intern</MobileLink>.
                 </p>
                 <p>
-                    Currently, building @ <MobileLink source="generate">Generate</MobileLink>, researching @{" "}
-                    <MobileLink source="parcs">PARCS Lab</MobileLink>.
+                    Currently exploring <MobileLink source="rag">RAG &amp; AI Engineering</MobileLink>, building{" "}
+                    <MobileLink source="rootspace">RootSpace</MobileLink>, and BCA graduate from{" "}
+                    <MobileLink source="vips">VIPS (GGSIPU)</MobileLink>.
                 </p>
                 <Socials className="mt-2" />
             </motion.div>

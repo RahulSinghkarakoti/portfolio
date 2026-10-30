@@ -1,90 +1,285 @@
 import { smoothstep } from "./world";
 
-export const FLAG_BODY = 1;
-export const FLAG_FIN = 2;
-export const FLAG_EYE = 3;
-export const FLAG_DORSAL = 4;
-export const FLAG_BARBEL = 5;
+export type SharkKind = "classic" | "hammerhead" | "zebra" | "tiger" | "greathammer" | "mako" | "thresher" | "nurse";
 
-/** Where a point landed on the koi; `du`/`da` give the fin-ray direction in body space. */
-export interface ShapeHit {
-    flag: number;
-    across: number;
-    du: number;
-    da: number;
+export interface Species {
+    name: string;
+    cruise: number;
+    maxSpeed: number;
+    minSpeed: number;
+    weight: number;
+    schoolSize: [number, number];
+    spacing: [number, number];
+    align: number;
+    cohesion: number;
+    jitter: number;
+    mill: number;
+    verticalDrag: number;
 }
 
-// Top-down outline as a fraction of length: blunt round head, plump shoulders, narrow tail stalk.
-export function bodyHalfWidth(s: number) {
-    if (s < 0.12) return 0.11 * Math.pow(Math.sin(((s / 0.12) * Math.PI) / 2), 0.55);
-    if (s < 0.3) return 0.11 + 0.025 * smoothstep(0.12, 0.3, s);
-    return 0.033 + 0.102 * (1 - smoothstep(0.3, 0.74, s));
-}
+export const SPECIES: Species[] = [
+    {
+        name: "sardine",
+        cruise: 36,
+        maxSpeed: 64,
+        minSpeed: 18,
+        weight: 3,
+        schoolSize: [18, 28],
+        spacing: [1.8, 1.1],
+        align: 1.6,
+        cohesion: 1.6,
+        jitter: 40,
+        mill: 70,
+        verticalDrag: 0.5,
+    },
+    {
+        name: "anchovy",
+        cruise: 46,
+        maxSpeed: 78,
+        minSpeed: 22,
+        weight: 3,
+        schoolSize: [20, 32],
+        spacing: [1.5, 1],
+        align: 3.2,
+        cohesion: 0.45,
+        jitter: 30,
+        mill: 0,
+        verticalDrag: 1.4,
+    },
+    {
+        name: "silverside",
+        cruise: 40,
+        maxSpeed: 70,
+        minSpeed: 20,
+        weight: 3,
+        schoolSize: [12, 20],
+        spacing: [2, 1.1],
+        align: 2.4,
+        cohesion: 1.1,
+        jitter: 35,
+        mill: 0,
+        verticalDrag: 1.6,
+    },
+    {
+        name: "mackerel",
+        cruise: 32,
+        maxSpeed: 60,
+        minSpeed: 16,
+        weight: 2,
+        schoolSize: [5, 9],
+        spacing: [2.6, 1.3],
+        align: 2,
+        cohesion: 0.9,
+        jitter: 25,
+        mill: 0,
+        verticalDrag: 2,
+    },
+    {
+        name: "goby",
+        cruise: 26,
+        maxSpeed: 56,
+        minSpeed: 10,
+        weight: 1,
+        schoolSize: [8, 12],
+        spacing: [1.4, 1.1],
+        align: 0.35,
+        cohesion: 1.4,
+        jitter: 110,
+        mill: 0,
+        verticalDrag: 0.3,
+    },
+];
 
-const BODY_END = 0.74;
+const TOTAL_WEIGHT = SPECIES.reduce((sum, s) => sum + s.weight, 0);
 
-// Butterfly tail: fans out from the stalk, with a V notch in the trailing edge.
-function tailHalfWidth(s: number) {
-    return 0.03 + 0.15 * Math.pow(smoothstep(0.7, 1, s), 0.8);
-}
-
-/** Test a point against a fin: an ellipse leaning back from a root on the body's edge. */
-function inFin(s: number, a: number, rootS: number, angle: number, reach: number, width: number, out: ShapeHit) {
-    const rootA = bodyHalfWidth(rootS) * 0.85;
-    const cosA = Math.cos(angle);
-    const sinA = Math.sin(angle);
-    const du = s - rootS;
-    const da = a - rootA;
-    const along = du * cosA + da * sinA - reach;
-    const perp = -du * sinA + da * cosA;
-    if ((along / reach) ** 2 + (perp / width) ** 2 > 1) return false;
-    out.flag = FLAG_FIN;
-    out.du = du;
-    out.da = da;
-    return true;
-}
-
-/**
- * Classify a point given in body coordinates, all as fractions of length:
- * `s` along the spine (0 snout, 1 tail tip), `a` distance from it, and
- * `past` how far it sits beyond the tail tip. `flare` spreads the fins.
- */
-export function classify(s: number, a: number, past: number, flare: number, out: ShapeHit, ahead = 0, lateral = 0) {
-    out.flag = 0;
-    out.across = 1;
-    out.du = 1;
-    out.da = 0;
-
-    // Barbels: a short whisker angling out from each corner of the mouth, the tell that this is a koi.
-    if (ahead > 0) {
-        if (ahead < 0.05 && Math.abs(lateral - (0.045 + ahead * 0.7)) < 0.016) {
-            out.flag = FLAG_BARBEL;
-            return true;
-        }
-        return false;
+export function pickSpecies() {
+    let r = Math.random() * TOTAL_WEIGHT;
+    for (let i = 0; i < SPECIES.length; i++) {
+        r -= SPECIES[i].weight;
+        if (r <= 0) return i;
     }
+    return 0;
+}
 
-    const w = bodyHalfWidth(s);
-    if (s <= BODY_END && a <= w) {
-        const across = a / w;
-        out.across = across;
-        if (s > 0.055 && s < 0.1 && across > 0.5 && across < 0.85) out.flag = FLAG_EYE;
-        else if (s > 0.28 && s < 0.6 && across < 0.14) out.flag = FLAG_DORSAL;
-        else out.flag = FLAG_BODY;
-        return true;
-    }
+/** Classic top-down half-width at s in [0, 1] (snout -> tail), as a fraction of length. */
+function classicHalfWidth(s: number) {
+    if (s < 0.13) return 0.09 * Math.pow(Math.sin(((s / 0.13) * Math.PI) / 2), 0.95);
+    if (s < 0.3) return 0.09 + 0.016 * smoothstep(0.13, 0.3, s);
+    if (s < 0.84) return 0.019 + 0.087 * Math.pow(1 - (s - 0.3) / 0.54, 1.25);
+    const k = (s - 0.84) / 0.16;
+    return 0.019 * (1 - k) + 0.012 * Math.sin(k * Math.PI);
+}
 
-    if (s > 0.68 && past <= 0) {
-        const tw = tailHalfWidth(s) * flare;
-        if (a <= tw && s <= 0.86 + 0.14 * (a / tw)) {
-            out.flag = FLAG_FIN;
-            out.da = (a / tw) * 0.8;
-            return true;
-        }
-    }
+/** Body outline and fin layout per species. All values are fractions of length. */
+export interface SharkShape {
+    halfWidth: (s: number) => number;
+    pectoral: [number, number, number, number];
+    falcate: boolean;
+    pelvic: [number, number, number, number];
+    caudal: number;
+    dorsal: [number, number];
+    secondDorsal: [number, number];
+    head?: { span: number; sweep: number; depth: number; notch: number };
+    eye: [number, number] | null;
+    gills: [number, number];
+    tint: [number, number, number];
+}
 
-    return (
-        inFin(s, a, 0.19, 0.85 + 0.5 * (flare - 1), 0.066 * flare, 0.04, out) ||
-        inFin(s, a, 0.47, 0.75, 0.036, 0.018, out)
-    );
+export const SHAPES: Record<SharkKind, SharkShape> = {
+    classic: {
+        halfWidth: classicHalfWidth,
+        pectoral: [0.15, 0.43, 0.55, 0.26],
+        falcate: true,
+        pelvic: [0.57, 0.65, 0.69, 0.085],
+        caudal: 0.085,
+        dorsal: [0.33, 0.47],
+        secondDorsal: [0.71, 0.76],
+        eye: [0.1, 0.14],
+        gills: [0.19, 0.29],
+        tint: [0.92, 0.97, 1.05],
+    },
+    hammerhead: {
+        halfWidth: (s) => {
+            if (s < 0.06) return 0.045;
+            if (s < 0.3) return 0.045 + 0.061 * smoothstep(0.06, 0.3, s);
+            return classicHalfWidth(s) * 0.92;
+        },
+        head: { span: 0.17, sweep: 0.035, depth: 0.09, notch: 0 },
+        pectoral: [0.17, 0.4, 0.5, 0.22],
+        falcate: true,
+        pelvic: [0.56, 0.63, 0.67, 0.075],
+        caudal: 0.11,
+        dorsal: [0.28, 0.44],
+        secondDorsal: [0.7, 0.74],
+        eye: null,
+        gills: [0.16, 0.26],
+        tint: [0.96, 0.98, 0.9],
+    },
+    tiger: {
+        halfWidth: (s) => {
+            if (s < 0.13) return 0.1 * Math.pow(Math.sin(((s / 0.13) * Math.PI) / 2), 0.45);
+            if (s < 0.3) return 0.1 + 0.014 * smoothstep(0.13, 0.3, s);
+            if (s < 0.84) return 0.019 + 0.095 * Math.pow(1 - (s - 0.3) / 0.54, 1.2);
+            const k = (s - 0.84) / 0.16;
+            return 0.019 * (1 - k) + 0.012 * Math.sin(k * Math.PI);
+        },
+        pectoral: [0.15, 0.42, 0.53, 0.25],
+        falcate: true,
+        pelvic: [0.57, 0.65, 0.69, 0.085],
+        caudal: 0.095,
+        dorsal: [0.33, 0.46],
+        secondDorsal: [0.71, 0.75],
+        eye: [0.08, 0.12],
+        gills: [0.19, 0.28],
+        tint: [1.02, 0.95, 0.84],
+    },
+    zebra: {
+        halfWidth: (s) => {
+            if (s < 0.1) return 0.075 * Math.pow(Math.sin(((s / 0.1) * Math.PI) / 2), 0.7);
+            if (s < 0.28) return 0.075 + 0.025 * smoothstep(0.1, 0.28, s);
+            if (s < 0.55) return 0.022 + 0.078 * Math.pow(1 - (s - 0.28) / 0.27, 1.1);
+            const k = (s - 0.55) / 0.45;
+            return 0.022 * (1 - k * k) + 0.012 * Math.sin(k * Math.PI);
+        },
+        pectoral: [0.12, 0.3, 0.36, 0.19],
+        falcate: false,
+        pelvic: [0.42, 0.48, 0.51, 0.065],
+        caudal: 0,
+        dorsal: [0.36, 0.44],
+        secondDorsal: [0.49, 0.53],
+        eye: [0.06, 0.09],
+        gills: [0.13, 0.2],
+        tint: [1.08, 0.97, 0.74],
+    },
+    greathammer: {
+        halfWidth: (s) => {
+            if (s < 0.05) return 0.04;
+            if (s < 0.3) return 0.04 + 0.07 * smoothstep(0.05, 0.3, s);
+            return classicHalfWidth(s) * 0.95;
+        },
+        head: { span: 0.21, sweep: 0.006, depth: 0.085, notch: 0.014 },
+        pectoral: [0.16, 0.38, 0.49, 0.24],
+        falcate: true,
+        pelvic: [0.55, 0.62, 0.67, 0.085],
+        caudal: 0.13,
+        dorsal: [0.24, 0.45],
+        secondDorsal: [0.68, 0.74],
+        eye: null,
+        gills: [0.15, 0.25],
+        tint: [0.86, 0.93, 1.02],
+    },
+    mako: {
+        halfWidth: (s) => {
+            if (s < 0.17) return 0.088 * Math.pow(Math.sin(((s / 0.17) * Math.PI) / 2), 1.5);
+            if (s < 0.32) return 0.088 + 0.012 * smoothstep(0.17, 0.32, s);
+            if (s < 0.86) return 0.014 + 0.086 * Math.pow(1 - (s - 0.32) / 0.54, 1.45);
+            const k = (s - 0.86) / 0.14;
+            return 0.014 * (1 - k) + 0.01 * Math.sin(k * Math.PI);
+        },
+        pectoral: [0.18, 0.4, 0.5, 0.21],
+        falcate: true,
+        pelvic: [0.58, 0.64, 0.68, 0.06],
+        caudal: 0.13,
+        dorsal: [0.34, 0.45],
+        secondDorsal: [0.76, 0.79],
+        eye: [0.11, 0.15],
+        gills: [0.2, 0.3],
+        tint: [0.78, 0.9, 1.2],
+    },
+    thresher: {
+        halfWidth: (s) => {
+            if (s < 0.08) return 0.07 * Math.pow(Math.sin(((s / 0.08) * Math.PI) / 2), 0.75);
+            if (s < 0.2) return 0.07 + 0.02 * smoothstep(0.08, 0.2, s);
+            if (s < 0.48) return 0.012 + 0.078 * Math.pow(1 - (s - 0.2) / 0.28, 1.3);
+            const k = (s - 0.48) / 0.52;
+            return 0.012 * (1 - k) + 0.006 * Math.sin(k * Math.PI * 0.9) + 0.002;
+        },
+        pectoral: [0.12, 0.27, 0.36, 0.2],
+        falcate: true,
+        pelvic: [0.37, 0.41, 0.44, 0.045],
+        caudal: 0,
+        dorsal: [0.24, 0.32],
+        secondDorsal: [0.45, 0.47],
+        eye: [0.05, 0.1],
+        gills: [0.11, 0.18],
+        tint: [1.0, 0.9, 1.08],
+    },
+    nurse: {
+        halfWidth: (s) => {
+            if (s < 0.08) return 0.085 * Math.pow(Math.sin(((s / 0.08) * Math.PI) / 2), 0.4);
+            if (s < 0.3) return 0.085 + 0.02 * smoothstep(0.08, 0.3, s);
+            if (s < 0.72) return 0.022 + 0.083 * Math.pow(1 - (s - 0.3) / 0.42, 1.1);
+            const k = (s - 0.72) / 0.28;
+            return 0.022 * (1 - k * k) + 0.014 * Math.sin(k * Math.PI);
+        },
+        pectoral: [0.16, 0.34, 0.4, 0.17],
+        falcate: false,
+        pelvic: [0.45, 0.52, 0.55, 0.075],
+        caudal: 0,
+        dorsal: [0.5, 0.58],
+        secondDorsal: [0.63, 0.69],
+        eye: [0.05, 0.075],
+        gills: [0.14, 0.22],
+        tint: [1.1, 0.96, 0.76],
+    },
+};
+
+export const KINDS = Object.keys(SHAPES) as SharkKind[];
+
+export function inTriangle(
+    px: number,
+    py: number,
+    ax: number,
+    ay: number,
+    bx: number,
+    by: number,
+    cx: number,
+    cy: number
+) {
+    const d1 = (px - bx) * (ay - by) - (ax - bx) * (py - by);
+    const d2 = (px - cx) * (by - cy) - (bx - cx) * (py - cy);
+    const d3 = (px - ax) * (cy - ay) - (cx - ax) * (py - ay);
+    const neg = d1 < 0 || d2 < 0 || d3 < 0;
+    const pos = d1 > 0 || d2 > 0 || d3 > 0;
+    return !(neg && pos);
 }

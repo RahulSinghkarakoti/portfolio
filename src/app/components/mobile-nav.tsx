@@ -10,13 +10,11 @@ import ThemeIcon from "./theme-icon";
 const navLinks = [
     { label: "Home", href: "/" },
     { label: "Projects", href: "/projects" },
-    { label: "Gallery", href: "/gallery" },
-    { label: "Blog", href: "/blog" },
 ];
 
 const secondaryLinks = [
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/dao-ho/" },
-    { label: "GitHub", href: "https://github.com/Dao-Ho" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/rahul-singh-9b2251304/" },
+    { label: "GitHub", href: "https://github.com/rahulSinghkarakoti" },
 ];
 
 const fg = "var(--foreground-color)";
@@ -39,7 +37,7 @@ export default function MobileNav() {
                     style={{ background: pillBg, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
                 >
                     <span className="font-inter font-normal text-20 tracking-normal" style={{ color: fg }}>
-                        Dao Ho
+                        Rahul Singh
                     </span>
                     <div className="relative" style={{ width: "5vw", height: "5vw" }}>
                         <AnimatePresence mode="wait">
