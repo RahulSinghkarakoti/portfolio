@@ -405,20 +405,8 @@ export class KoiRenderer {
     }
 
     private rasterizeSharks(sharks: Shark[], t: number) {
-        const {
-            sharkFlag,
-            sharkShade,
-            sharkKey,
-            sharkDepth,
-            sharkKind,
-            sharkShadow,
-            spine,
-            arc,
-            cw,
-            ch,
-            cols,
-            rows,
-        } = this;
+        const { sharkFlag, sharkShade, sharkKey, sharkDepth, sharkKind, sharkShadow, spine, arc, cw, ch, cols, rows } =
+            this;
         sharkFlag.fill(0);
         sharkShadow.fill(0);
 
@@ -583,8 +571,7 @@ export class KoiRenderer {
             ctx.fillRect(x, y, cw, ch);
 
             let color: string;
-            if (flag === FLAG_MARK)
-                color = `rgb(${Math.round(70 * tr)},${Math.round(70 * tg)},${Math.round(70 * tb)})`;
+            if (flag === FLAG_MARK) color = `rgb(${Math.round(70 * tr)},${Math.round(70 * tg)},${Math.round(70 * tb)})`;
             else if (roll < 0.09) color = ACCENTS[key % ACCENTS.length];
             else if (roll < 0.13) color = isLight ? "#1a1921" : "#ffffff";
             else color = isLight ? (shade > 0.55 ? "#22252e" : "#3a3e4c") : shade > 0.55 ? "#0e0f13" : "#1b1d24";

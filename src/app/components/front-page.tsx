@@ -196,7 +196,6 @@ const mobilePage = () => {
                     <MobileLink source="vips">VIPS (GGSIPU)</MobileLink>.
                 </p>
                 <Socials className="mt-2" />
-                <Credits />
             </motion.div>
         </Container>
     );

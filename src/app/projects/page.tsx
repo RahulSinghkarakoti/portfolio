@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { ExternalLink, Github } from "lucide-react";
 import MobileNav from "../components/mobile-nav";
@@ -30,10 +31,7 @@ export default function ProjectsRoute() {
         <div className="min-h-[100dvh] w-full bg-background font-geistMono text-foreground">
             <MobileNav />
             <TopNav />
-            <Container
-                as="main"
-                className="flex min-h-[100dvh] flex-col justify-center pb-16 pt-28 lg:pb-24 lg:pt-28"
-            >
+            <Container as="main" className="flex min-h-[100dvh] flex-col justify-center pb-16 pt-28 lg:pb-24 lg:pt-28">
                 <div className="max-w-[54rem]">
                     <div
                         className="divide-y"
@@ -58,15 +56,7 @@ export default function ProjectsRoute() {
     );
 }
 
-function ProjectRow({
-    project,
-    open,
-    onToggle,
-}: {
-    project: Project;
-    open: boolean;
-    onToggle: () => void;
-}) {
+function ProjectRow({ project, open, onToggle }: { project: Project; open: boolean; onToggle: () => void }) {
     return (
         <div style={{ borderColor: BORDER }}>
             <div
@@ -96,32 +86,34 @@ function ProjectRow({
 
                 <div className="flex shrink-0 items-center gap-3">
                     <span className="hidden text-[12px] tabular-nums opacity-40 sm:inline">{project.year}</span>
-                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                        {project.github && (
-                            <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${project.name} GitHub repository`}
-                                title="GitHub"
-                                className={ICON_BTN}
-                            >
-                                <Github size={15} strokeWidth={1.75} />
-                            </a>
-                        )}
-                        {project.live && (
-                            <a
-                                href={project.live}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${project.name} live link`}
-                                title="Live link"
-                                className={ICON_BTN}
-                            >
-                                <ExternalLink size={15} strokeWidth={1.75} />
-                            </a>
-                        )}
-                    </div>
+                    {(project.github || project.live) && (
+                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                            {project.github && (
+                                <a
+                                    href={project.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`${project.name} GitHub repository`}
+                                    title="GitHub"
+                                    className={ICON_BTN}
+                                >
+                                    <Github size={15} strokeWidth={1.75} />
+                                </a>
+                            )}
+                            {project.live && (
+                                <a
+                                    href={project.live}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`${project.name} live link`}
+                                    title="Live link"
+                                    className={ICON_BTN}
+                                >
+                                    <ExternalLink size={15} strokeWidth={1.75} />
+                                </a>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -136,6 +128,31 @@ function ProjectRow({
                     >
                         <div className=" pb-5 pl-7 pr-2 sm:pl-8">
                             <p className="text-[13.5px] leading-[1.7] opacity-70">{project.description}</p>
+                            {project.images && project.images.length > 0 && (
+                                <div className="mt-4 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                                    {project.images.map((src, idx) => (
+                                        <div
+                                            key={src}
+                                            className={`relative aspect-[16/10] shrink-0 overflow-hidden rounded-md ${
+                                                project.images!.length === 1 ? "w-full max-w-[32rem]" : "w-64 sm:w-80"
+                                            }`}
+                                            style={{
+                                                border: `1px solid ${BORDER}`,
+                                                background:
+                                                    "color-mix(in srgb, var(--foreground-color) 4%, transparent)",
+                                            }}
+                                        >
+                                            <Image
+                                                src={src}
+                                                alt={`${project.name} screenshot ${idx + 1}`}
+                                                fill
+                                                sizes="(max-width: 640px) 80vw, 320px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                             <div className="mt-3 flex flex-wrap items-center gap-1.5">
                                 {project.tech.map((t) => (
                                     <span
