@@ -55,7 +55,7 @@ export const projects: Project[] = [
         tech: ["React.js", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
         year: "Summer 2025",
         github: "https://github.com/RahulSinghkarakoti/Rootspace-frontend",
-        live: "https://rootspace-frontend.vercel.app/",
+        live: "https://rootspace-frontend.vercel.app",
         // e.g. ["/projects/rootspace/shot-1.webp"]
         images: [],
     },
