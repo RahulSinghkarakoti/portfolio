@@ -10,7 +10,7 @@ const SOCIALS = [
     { label: "github", href: "https://github.com/rahulSinghkarakoti" },
     { label: "linkedin", href: "https://www.linkedin.com/in/rahul-singh-9b2251304/" },
     { label: "email", href: "mailto:rahulkarakoti28@gmail.com" },
-    { label: "resume", href: "/Resume.pdf" },
+    { label: "resume", href: "/rahul_resume.pdf" },
 ];
 
 const CREDITS = [
@@ -52,7 +52,7 @@ const Socials = ({ className }: { className?: string }) => (
 );
 
 const Credits = ({ className }: { className?: string }) => (
-    <p className={`text-[12px] ${className ?? ""}`}>
+    <p className={`text-[8px] ${className ?? ""}`}>
         <span className="opacity-40">credits: </span>
         {CREDITS.map(({ label, href }, i) => (
             <span key={label}>
