@@ -32,7 +32,7 @@ const fontGeistMono = localFont({
 
 export const metadata: Metadata = {
     // Share images need absolute URLs, so relative ones resolve against the live site.
-    metadataBase: new URL("https://rahulsingh.dev"),
+    metadataBase: new URL("https://portfolio-zeta-beige-6cy5mbvnr0.vercel.app/"),
     title: "Rahul Singh",
     description: "Full Stack Developer · ERP, CRM, LMS & AI Engineering",
     twitter: { card: "summary_large_image" },
