@@ -21,7 +21,7 @@ export const projects: Project[] = [
             "Interactive AI engineering workbench for testing, comparing, and benchmarking every stage of the Retrieval-Augmented Generation pipeline—chunking boundaries, embedding models, dense/sparse/hybrid retrieval, cross-encoder reranking, and LLM generation—on the same dataset and query.",
         tech: ["Next.js", "TypeScript", "Embeddings", "Vector Search", "Reranking", "LLMs"],
         year: "Spring 2026",
-        github: "https://github.com/rahulSinghkarakoti",
+        github: "https://github.com/RahulSinghkarakoti/rag-labproject-frontend",
         // live: "https://github.com/rahulSinghkarakoti",
         // e.g. ["/projects/rag-lab/shot-1.webp"]
         images: [],
@@ -37,12 +37,12 @@ export const projects: Project[] = [
         year: "Fall 2025",
         live: "https://indicava.com",
         images: [
-            "/projects/indicava/main-admin-db.webp",
-            "/projects/indicava/student-db.webp",
-            "/projects/indicava/fe-db.webp",
-            "/projects/indicava/bank-db.webp",
-            "/projects/indicava/ai-chat.webp",
-            "/projects/indicava/roles-permission.webp",
+            // "/projects/indicava/main-admin-db.webp",
+            // "/projects/indicava/student-db.webp",
+            // "/projects/indicava/fe-db.webp",
+            // "/projects/indicava/bank-db.webp",
+            // "/projects/indicava/ai-chat.webp",
+            // "/projects/indicava/roles-permission.webp",
         ],
     },
     {

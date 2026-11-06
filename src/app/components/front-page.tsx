@@ -52,7 +52,7 @@ const Socials = ({ className }: { className?: string }) => (
 );
 
 const Credits = ({ className }: { className?: string }) => (
-    <p className={`text-[8px] ${className ?? ""}`}>
+    <p className={`text-[10px] ${className ?? ""}`}>
         <span className="opacity-40">credits: </span>
         {CREDITS.map(({ label, href }, i) => (
             <span key={label}>
@@ -123,13 +123,11 @@ const desktopPage = ({ stats }: { stats: PondStats }) => {
                     platforms from 0 to 1.
                 </p>
                 <p>
-                    Shipped <Cited source="indicava">Indicava ERP</Cited> and{" "}
-                    <Cited source="bestprep">BestPrep LMS</Cited> after starting as an{" "}
+                    Shipped <Cited source="indicava">Indicava ERP &amp; LMS</Cited> after starting as an{" "}
                     <Cited source="siteguruIntern">intern</Cited>.
                 </p>
                 <p>
-                    Currently exploring <Cited source="rag">RAG &amp; AI Engineering</Cited>, building{" "}
-                    <Cited source="rootspace">RootSpace</Cited>, and BCA graduate from{" "}
+                    Currently building <Cited source="rag">RAG-LAB</Cited>, exploring  AI Engineering, and BCA graduate from{" "}
                     <Cited source="vips">VIPS (GGSIPU)</Cited>.
                 </p>
                 <Socials className="mt-[1.5vh]" />
@@ -182,18 +180,16 @@ const mobilePage = () => {
             >
                 <h1>Hi, I&apos;m Rahul.</h1>
                 <p>
-                    Full Stack Developer @ <MobileLink source="siteguru">Site Guru</MobileLink>, building multi-tenant
-                    SaaS platforms from 0 to 1.
+                    Full Stack Developer @ <Cited source="siteguru">Site Guru</Cited>, building multi-tenant SaaS
+                    platforms from 0 to 1.
                 </p>
                 <p>
-                    Shipped <MobileLink source="indicava">Indicava ERP</MobileLink> and{" "}
-                    <MobileLink source="bestprep">BestPrep LMS</MobileLink> after starting as an{" "}
-                    <MobileLink source="siteguruIntern">intern</MobileLink>.
+                    Shipped <Cited source="indicava">Indicava ERP &amp; LMS</Cited> after starting as an{" "}
+                    <Cited source="siteguruIntern">intern</Cited>.
                 </p>
                 <p>
-                    Currently exploring <MobileLink source="rag">RAG &amp; AI Engineering</MobileLink>, building{" "}
-                    <MobileLink source="rootspace">RootSpace</MobileLink>, and BCA graduate from{" "}
-                    <MobileLink source="vips">VIPS (GGSIPU)</MobileLink>.
+                    Currently building <Cited source="rag">RAG-LAB</Cited>, exploring  AI Engineering, and BCA graduate from{" "}
+                    <Cited source="vips">VIPS (GGSIPU)</Cited>.
                 </p>
                 <Socials className="mt-2" />
             </motion.div>

@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import ThemeIcon from "./theme-icon";
 
 const LINKS = [
-    { label: "pond", href: "/" },
+    { label: "ocean", href: "/" },
     { label: "projects", href: "/projects" },
 ];
 
