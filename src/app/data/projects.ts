@@ -22,7 +22,7 @@ export const projects: Project[] = [
         tech: ["Next.js", "TypeScript", "Embeddings", "Vector Search", "Reranking", "LLMs"],
         year: "Spring 2026",
         github: "https://github.com/RahulSinghkarakoti/rag-labproject-frontend",
-        // live: "https://github.com/rahulSinghkarakoti",
+        live: "https://rag-lab.devvault.biz",
         // e.g. ["/projects/rag-lab/shot-1.webp"]
         images: [],
     },
@@ -55,7 +55,7 @@ export const projects: Project[] = [
         tech: ["React.js", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
         year: "Summer 2025",
         github: "https://github.com/RahulSinghkarakoti/Rootspace-frontend",
-        live: "https://rootspace-frontend.vercel.app",
+        live: "https://rootspace.devvault.biz",
         // e.g. ["/projects/rootspace/shot-1.webp"]
         images: [],
     },
