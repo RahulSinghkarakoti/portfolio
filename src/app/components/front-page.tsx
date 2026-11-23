@@ -131,7 +131,7 @@ const desktopPage = ({ stats }: { stats: PondStats }) => {
                     <Cited source="vips">VIPS (GGSIPU)</Cited>.
                 </p>
                 <Socials className="mt-[1.5vh]" />
-                <Credits className="mt-1" />
+                {/* <Credits className="mt-1" /> */}
             </motion.div>
         </Container>
     );
